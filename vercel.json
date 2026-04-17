@@ -1,0 +1,14 @@
+{
+  "buildCommand": "pnpm run build",
+  "outputDirectory": "artifacts/web3nano/dist/public",
+  "framework": "vite",
+  "regions": ["iad1"],
+  "env": {
+    "NODE_ENV": "production"
+  },
+  "env_overrides": {
+    "development": {
+      "NODE_ENV": "development"
+    }
+  }
+}
