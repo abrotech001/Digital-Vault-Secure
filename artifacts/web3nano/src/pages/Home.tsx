@@ -1,6 +1,7 @@
 import { Layout } from "@/components/Layout";
 import { useI18n } from "@/lib/i18n";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import { Shield, Lock, Network, Database, LayoutDashboard, Zap, EyeOff, LifeBuoy } from "lucide-react";
 import { Link } from "wouter";
 import { motion } from "framer-motion";
