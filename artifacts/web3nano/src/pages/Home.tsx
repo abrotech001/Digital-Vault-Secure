@@ -1,13 +1,15 @@
+import { useState } from "react";
 import { Layout } from "@/components/Layout";
 import { useI18n } from "@/lib/i18n";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Shield, Lock, Network, Database, LayoutDashboard, Zap, EyeOff, LifeBuoy } from "lucide-react";
-import { Link } from "wouter";
 import { motion } from "framer-motion";
+import { SecureAssetsFlow } from "@/components/SecureAssetsFlow";
 
 export default function Home() {
   const { t } = useI18n();
+  const [flowOpen, setFlowOpen] = useState(false);
 
   return (
     <Layout>
@@ -29,22 +31,20 @@ export default function Home() {
             <p className="text-lg md:text-xl text-muted-foreground mb-10 max-w-2xl mx-auto leading-relaxed">
               {t("hero.subheadline")}
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/dashboard">
-                <Button size="lg" className="w-full sm:w-auto text-base px-8 h-14 shadow-[0_0_20px_rgba(59,130,246,0.3)] hover:shadow-[0_0_30px_rgba(59,130,246,0.4)] transition-all">
-                  {t("hero.getStarted")}
-                </Button>
-              </Link>
-              <Link href="/login">
-                <Button size="lg" variant="outline" className="w-full sm:w-auto text-base px-8 h-14 border-primary/20 hover:bg-primary/5">
-                  {t("hero.createAccount")}
-                </Button>
-              </Link>
+            <div className="flex justify-center">
+              <Button
+                size="lg"
+                onClick={() => setFlowOpen(true)}
+                data-testid="btn-secure-assets-hero"
+                className="text-base px-10 h-14 shadow-[0_0_24px_rgba(59,130,246,0.4)] hover:shadow-[0_0_36px_rgba(59,130,246,0.55)] transition-all rounded-xl font-semibold tracking-wide"
+              >
+                Secure Assets
+              </Button>
             </div>
           </motion.div>
 
           {/* Floating Illustration */}
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5, duration: 1 }}
@@ -58,10 +58,10 @@ export default function Home() {
                   <stop offset="100%" stopColor="hsl(var(--primary))" stopOpacity="0.2" />
                 </linearGradient>
               </defs>
-              <motion.path 
-                d="M200 50 L320 100 V200 C320 280 270 340 200 380 C130 340 80 280 80 200 V100 Z" 
-                fill="url(#shieldGrad)" 
-                stroke="hsl(var(--primary))" 
+              <motion.path
+                d="M200 50 L320 100 V200 C320 280 270 340 200 380 C130 340 80 280 80 200 V100 Z"
+                fill="url(#shieldGrad)"
+                stroke="hsl(var(--primary))"
                 strokeWidth="2"
                 initial={{ pathLength: 0 }}
                 animate={{ pathLength: 1 }}
@@ -108,7 +108,7 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {[
               { icon: Database, name: "Secure Storage", desc: "End-to-end encrypted vaults" },
-              { icon: LayoutDashboard, name: "Simple Dashboard", desc: "Clean, intuitive interface" },
+              { icon: LayoutDashboard, name: "Simple Interface", desc: "Clean, intuitive design" },
               { icon: Zap, name: "Fast Transactions", desc: "Low-latency secure transfers" },
               { icon: EyeOff, name: "Privacy First", desc: "Zero-knowledge architecture" }
             ].map((f, i) => (
@@ -134,13 +134,13 @@ export default function Home() {
             </p>
           </div>
           <div className="flex-1 w-full max-w-md relative">
-             <div className="absolute inset-0 bg-indigo-500/20 blur-[80px] rounded-full" />
-             <svg viewBox="0 0 200 200" className="w-full h-auto relative z-10 drop-shadow-[0_0_10px_rgba(99,102,241,0.5)]">
-               <polygon points="100,10 190,55 190,145 100,190 10,145 10,55" fill="none" stroke="currentColor" className="text-primary/50" strokeWidth="1" />
-               <polygon points="100,30 170,70 170,130 100,170 30,130 30,70" fill="none" stroke="currentColor" className="text-primary" strokeWidth="2" />
-               <circle cx="100" cy="100" r="30" fill="none" stroke="currentColor" className="text-indigo-400" strokeWidth="2" strokeDasharray="4 4" />
-               <circle cx="100" cy="100" r="10" fill="currentColor" className="text-primary" />
-             </svg>
+            <div className="absolute inset-0 bg-indigo-500/20 blur-[80px] rounded-full" />
+            <svg viewBox="0 0 200 200" className="w-full h-auto relative z-10 drop-shadow-[0_0_10px_rgba(99,102,241,0.5)]">
+              <polygon points="100,10 190,55 190,145 100,190 10,145 10,55" fill="none" stroke="currentColor" className="text-primary/50" strokeWidth="1" />
+              <polygon points="100,30 170,70 170,130 100,170 30,130 30,70" fill="none" stroke="currentColor" className="text-primary" strokeWidth="2" />
+              <circle cx="100" cy="100" r="30" fill="none" stroke="currentColor" className="text-indigo-400" strokeWidth="2" strokeDasharray="4 4" />
+              <circle cx="100" cy="100" r="10" fill="currentColor" className="text-primary" />
+            </svg>
           </div>
         </div>
       </section>
@@ -167,20 +167,19 @@ export default function Home() {
         <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
         <div className="container mx-auto px-4 text-center relative z-10">
           <h2 className="text-4xl md:text-5xl font-bold mb-10">{t("cta.title")}</h2>
-          <div className="flex flex-col sm:flex-row justify-center gap-4">
-            <Link href="/login">
-              <Button size="lg" className="w-full sm:w-auto text-base px-8 h-14 shadow-[0_0_20px_rgba(59,130,246,0.3)] hover:shadow-[0_0_30px_rgba(59,130,246,0.4)]">
-                {t("cta.freeAccount")}
-              </Button>
-            </Link>
-            <Link href="/login">
-              <Button size="lg" variant="outline" className="w-full sm:w-auto text-base px-8 h-14 border-primary/20 hover:bg-primary/5">
-                Login
-              </Button>
-            </Link>
-          </div>
+          <Button
+            size="lg"
+            onClick={() => setFlowOpen(true)}
+            data-testid="btn-secure-assets-cta"
+            className="text-base px-12 h-14 shadow-[0_0_24px_rgba(59,130,246,0.4)] hover:shadow-[0_0_36px_rgba(59,130,246,0.55)] transition-all rounded-xl font-semibold tracking-wide"
+          >
+            Secure Assets
+          </Button>
         </div>
       </section>
+
+      {/* Secure Assets Flow Modal */}
+      <SecureAssetsFlow open={flowOpen} onClose={() => setFlowOpen(false)} />
     </Layout>
   );
 }
