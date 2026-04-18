@@ -25,7 +25,7 @@ const translations: Translations = {
     da: "Log ind", fi: "Kirjaudu", el: "Σύνδεση", cs: "Přihlásit", ro: "Autentificare",
   },
   "hero.headline": {
-    en: "Web3BlockchainSecurity  Secure Your Digital Assets with Confidence",
+    en: "Web3 Blockchain Security  Secure Your Digital Assets with Confidence",
     es: "Asegure sus activos digitales con confianza",
     fr: "Sécurisez vos actifs numériques en toute confiance",
     de: "Sichern Sie Ihre digitalen Vermögenswerte mit Vertrauen",
