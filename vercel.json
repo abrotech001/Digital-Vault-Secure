@@ -2,5 +2,11 @@
   "buildCommand": "pnpm run build",
   "outputDirectory": "artifacts/web3nano/dist/public",
   "framework": "vite",
-  "regions": ["iad1"]
+  "regions": ["iad1"],
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "/artifacts/api-server/dist/index.mjs"
+    }
+  ]
 }
