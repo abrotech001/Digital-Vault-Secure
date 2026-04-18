@@ -388,6 +388,20 @@ const translations: Translations = {
   "future.list.1": { en: "Post-quantum encryption algorithms", es: "Algoritmos de cifrado poscuántico", fr: "Algorithmes de cryptage post-quantique", de: "Post-Quanten-Verschlüsselungsalgorithmen", zh: "抗量子加密算法" },
   "future.list.2": { en: "Biometric hardware authentication", es: "Autenticación de hardware biométrico", fr: "Authentification matérielle biométrique", de: "Biometrische Hardware-Authentifizierung", zh: "生物识别硬件认证" },
   "future.list.3": { en: "AI-powered threat detection", es: "Detección de amenazas impulsada por IA", fr: "Détection des menaces par IA", de: "KI-gestützte Bedrohungserkennung", zh: "人工智能驱动的威胁检测" },
+  "cta.subtitle": { 
+    en: "Join over 2 million wallets already secured on Web3BlockchainSecurity.", 
+    es: "Únase a más de 2 millones de billeteras ya aseguradas en Web3BlockchainSecurity.", 
+    fr: "Rejoignez plus de 2 millions de portefeuilles déjà sécurisés sur Web3BlockchainSecurity.", 
+    de: "Schließen Sie sich über 2 Millionen Wallets an, die bereits auf Web3BlockchainSecurity gesichert sind.", 
+    zh: "加入在Web3BlockchainSecurity上已受到保护的200多万个钱包。" 
+  },
+  "cta.button": { 
+    en: "Secure Assets Now", 
+    es: "Asegurar activos ahora", 
+    fr: "Sécuriser les actifs maintenant", 
+    de: "Vermögenswerte jetzt sichern", 
+    zh: "立即保护资产" 
+  },
 };
 
 interface I18nContextType {
