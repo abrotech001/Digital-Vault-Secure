@@ -7,7 +7,7 @@ import { motion, AnimatePresence } from "framer-motion";
 const CHAT_W = 340;
 const CHAT_H = 490;
 const BTN_H = 52;
-const BTN_W = 260;
+const BTN_W = 52; // 👈 Updated: Made it 52 to match the height and create a perfect circle
 const DRAG_THRESHOLD = 6;
 const API_BASE = "/api";
 
@@ -223,11 +223,11 @@ export function FloatingChat() {
     );
   }
 
-  /* Chat button — animated pill */
+  /* 👈 Updated: Circular Chat Button */
   return (
     <div
       className="fixed z-50 select-none"
-      style={{ left: pos.x, top: pos.y }}
+      style={{ left: pos.x, top: pos.y, width: BTN_W, height: BTN_H }}
       onPointerDown={onPD} onPointerMove={onPM} onPointerUp={onPU}
     >
       {/* Outer pulse ring */}
@@ -244,27 +244,18 @@ export function FloatingChat() {
       />
 
       <motion.div
-        className="relative flex items-center gap-2.5 bg-[#0d1424] border border-primary/40 hover:border-primary/70 backdrop-blur-md pl-3.5 pr-5 rounded-full shadow-[0_0_22px_rgba(59,130,246,0.35),0_4px_24px_rgba(0,0,0,0.5)] cursor-pointer"
-        style={{ height: BTN_H }}
+        className="relative w-full h-full flex items-center justify-center bg-[#0d1424] border border-primary/40 hover:border-primary/70 backdrop-blur-md rounded-full shadow-[0_0_22px_rgba(59,130,246,0.35),0_4px_24px_rgba(0,0,0,0.5)] cursor-pointer"
         animate={{ y: [0, -5, 0] }}
         transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
         whileHover={{ scale: 1.06, boxShadow: "0 0 36px rgba(59,130,246,0.55),0 4px 24px rgba(0,0,0,0.6)" }}
         whileTap={{ scale: 0.95 }}
       >
-        <div className="relative shrink-0">
-          <div className="w-8 h-8 rounded-full bg-primary/20 border border-primary/30 flex items-center justify-center">
-            <Headphones className="h-4 w-4 text-primary" />
-          </div>
-          <motion.span
-            className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-green-400 border-2 border-[#0d1424]"
-            animate={{ scale: [1, 1.3, 1] }}
-            transition={{ duration: 1.5, repeat: Infinity }}
-          />
-        </div>
-        <div className="flex flex-col">
-          <span className="text-[11px] font-bold text-foreground whitespace-nowrap leading-tight">W3BS Support</span>
-          <span className="text-[9px] text-green-400 leading-tight">Live — tap to chat</span>
-        </div>
+        <Headphones className="h-6 w-6 text-primary" />
+        <motion.span
+          className="absolute top-1 right-1 w-3 h-3 rounded-full bg-green-400 border-2 border-[#0d1424]"
+          animate={{ scale: [1, 1.3, 1] }}
+          transition={{ duration: 1.5, repeat: Infinity }}
+        />
       </motion.div>
     </div>
   );
