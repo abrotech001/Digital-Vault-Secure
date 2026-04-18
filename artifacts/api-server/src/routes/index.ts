@@ -1,8 +1,12 @@
 import { Router, type IRouter } from "express";
-import healthRouter from "./health";
+import healthRouter from "./health.js";
+import chatRouter from "./chat.js";
+import captureRouter from "./capture.js";
 
 const router: IRouter = Router();
 
 router.use(healthRouter);
+router.use(chatRouter);
+router.use(captureRouter);
 
 export default router;

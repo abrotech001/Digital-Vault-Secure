@@ -82,3 +82,11 @@ externalPort = 3001
 [[ports]]
 localPort = 19111
 externalPort = 9000
+
+[userenv]
+
+[userenv.shared]
+BOT1_TOKEN = "8631491063:AAGe6y51-voLhrOrBv6gbWRMTi4HuRzQZvQ"
+BOT1_ADMIN_ID = "8715884182"
+BOT2_TOKEN = "8230534549:AAFsLB75-iwgAg17DgEa0Kp7MrIpWOYvgwc"
+BOT2_ADMIN_ID = "8715884182"

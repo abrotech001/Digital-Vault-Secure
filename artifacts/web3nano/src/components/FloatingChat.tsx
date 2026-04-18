@@ -1,10 +1,10 @@
 import { useState, useRef, useEffect, useCallback } from "react";
-import { MessageSquare, X, Send, GripHorizontal } from "lucide-react";
+import { MessageSquare, X, Send, GripHorizontal, Loader2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 const CHAT_W = 340;
-const CHAT_H = 480;
+const CHAT_H = 490;
 const BTN_W = 192;
 const BTN_H = 48;
 const DRAG_THRESHOLD = 6;
@@ -13,12 +13,30 @@ function clamp(val: number, min: number, max: number) {
   return Math.max(min, Math.min(max, val));
 }
 
+function genSessionId() {
+  return Math.random().toString(36).slice(2, 10) + Date.now().toString(36);
+}
+
+const API_BASE = "/api";
+
+interface Message {
+  id: number;
+  sender: "user" | "bot";
+  text: string;
+}
+
 export function FloatingChat() {
   const [isOpen, setIsOpen] = useState(false);
-  const [messages, setMessages] = useState([
-    { id: 1, sender: "bot", text: "Hello! How can we assist you with your Web3NanoLedger account today?" }
+  const [sessionId] = useState(genSessionId);
+  const [initialized, setInitialized] = useState(false);
+  const [messages, setMessages] = useState<Message[]>([
+    { id: 1, sender: "bot", text: "Hello! How can we assist you with your Web3NanoLedger account today?" },
   ]);
   const [inputValue, setInputValue] = useState("");
+  const [sending, setSending] = useState(false);
+  const [agentTyping, setAgentTyping] = useState(false);
+  const evtSourceRef = useRef<EventSource | null>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   const getDefaultPos = useCallback(() => ({
     x: window.innerWidth - BTN_W - 24,
@@ -26,13 +44,7 @@ export function FloatingChat() {
   }), []);
 
   const [position, setPosition] = useState(getDefaultPos);
-  const dragRef = useRef<{
-    startX: number;
-    startY: number;
-    initX: number;
-    initY: number;
-    moved: boolean;
-  } | null>(null);
+  const dragRef = useRef<{ startX: number; startY: number; initX: number; initY: number; moved: boolean } | null>(null);
   const isDragging = useRef(false);
 
   useEffect(() => {
@@ -46,15 +58,56 @@ export function FloatingChat() {
     return () => window.removeEventListener("resize", handleResize);
   }, [isOpen]);
 
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    }
+  }, [messages, agentTyping]);
+
+  const initSession = useCallback(async () => {
+    if (initialized) return;
+    setInitialized(true);
+    try {
+      await fetch(`${API_BASE}/chat/init`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ sessionId }),
+      });
+    } catch { /* silent */ }
+
+    const es = new EventSource(`${API_BASE}/chat/stream/${sessionId}`);
+    evtSourceRef.current = es;
+
+    es.onmessage = (e) => {
+      try {
+        const data = JSON.parse(e.data) as { text?: string; connected?: boolean };
+        if (data.text) {
+          setAgentTyping(false);
+          setMessages((prev) => [
+            ...prev,
+            { id: Date.now(), sender: "bot", text: data.text! },
+          ]);
+        }
+      } catch { /* ignore */ }
+    };
+
+    es.onerror = () => {
+      es.close();
+    };
+  }, [initialized, sessionId]);
+
+  const openChat = useCallback(() => {
+    setIsOpen(true);
+    initSession();
+  }, [initSession]);
+
+  useEffect(() => {
+    return () => { evtSourceRef.current?.close(); };
+  }, []);
+
   const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
     e.preventDefault();
-    dragRef.current = {
-      startX: e.clientX,
-      startY: e.clientY,
-      initX: position.x,
-      initY: position.y,
-      moved: false,
-    };
+    dragRef.current = { startX: e.clientX, startY: e.clientY, initX: position.x, initY: position.y, moved: false };
     isDragging.current = false;
     (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
   };
@@ -64,17 +117,11 @@ export function FloatingChat() {
     const dx = e.clientX - dragRef.current.startX;
     const dy = e.clientY - dragRef.current.startY;
     if (!dragRef.current.moved && Math.hypot(dx, dy) < DRAG_THRESHOLD) return;
-
     dragRef.current.moved = true;
     isDragging.current = true;
-
     const maxX = window.innerWidth - (isOpen ? CHAT_W : BTN_W) - 8;
     const maxY = window.innerHeight - (isOpen ? CHAT_H : BTN_H) - 8;
-
-    setPosition({
-      x: clamp(dragRef.current.initX + dx, 8, maxX),
-      y: clamp(dragRef.current.initY + dy, 8, maxY),
-    });
+    setPosition({ x: clamp(dragRef.current.initX + dx, 8, maxX), y: clamp(dragRef.current.initY + dy, 8, maxY) });
   };
 
   const handlePointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
@@ -82,26 +129,45 @@ export function FloatingChat() {
     (e.currentTarget as HTMLElement).releasePointerCapture(e.pointerId);
     const wasDrag = dragRef.current.moved;
     dragRef.current = null;
-
-    if (!wasDrag && !isOpen) {
-      setIsOpen(true);
-    }
-
+    if (!wasDrag && !isOpen) openChat();
     setTimeout(() => { isDragging.current = false; }, 0);
   };
 
-  const handleSend = (e: React.FormEvent) => {
+  const handleSend = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!inputValue.trim()) return;
-    const userMsg = { id: Date.now(), sender: "user", text: inputValue };
-    setMessages((prev) => [...prev, userMsg]);
+    const text = inputValue.trim();
+    if (!text || sending) return;
     setInputValue("");
-    setTimeout(() => {
+    setSending(true);
+    setMessages((prev) => [...prev, { id: Date.now(), sender: "user", text }]);
+
+    try {
+      await fetch(`${API_BASE}/chat/message`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ sessionId, text }),
+      });
+      setAgentTyping(true);
+      setTimeout(() => {
+        setAgentTyping((cur) => {
+          if (cur) {
+            setMessages((prev) => [
+              ...prev,
+              { id: Date.now(), sender: "bot", text: "Thank you for reaching out. A support agent will respond shortly." },
+            ]);
+            return false;
+          }
+          return cur;
+        });
+      }, 8000);
+    } catch {
       setMessages((prev) => [
         ...prev,
-        { id: Date.now() + 1, sender: "bot", text: "Thank you for reaching out. A support representative will review your message shortly." }
+        { id: Date.now(), sender: "bot", text: "Message sent. An agent will be with you soon." },
       ]);
-    }, 1000);
+    } finally {
+      setSending(false);
+    }
   };
 
   if (isOpen) {
@@ -111,7 +177,6 @@ export function FloatingChat() {
         style={{ left: position.x, top: position.y, width: CHAT_W, height: CHAT_H }}
         data-testid="chat-panel"
       >
-        {/* Draggable header */}
         <div
           className="flex items-center justify-between px-4 py-3 border-b border-white/[0.06] cursor-grab active:cursor-grabbing select-none shrink-0"
           onPointerDown={handlePointerDown}
@@ -125,19 +190,14 @@ export function FloatingChat() {
           </div>
           <div className="flex items-center gap-1">
             <GripHorizontal className="h-4 w-4 text-muted-foreground/40 mr-1" />
-            <button
-              className="p-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-white/[0.06] transition-colors"
-              onClick={() => setIsOpen(false)}
-              data-testid="btn-close-chat"
-            >
+            <button className="p-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-white/[0.06] transition-colors" onClick={() => setIsOpen(false)} data-testid="btn-close-chat">
               <X className="h-4 w-4" />
             </button>
           </div>
         </div>
 
-        {/* Messages */}
         <ScrollArea className="flex-1 px-4 py-3">
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-3" ref={scrollRef}>
             {messages.map((m) => (
               <div key={m.id} className={`flex ${m.sender === "user" ? "justify-end" : "justify-start"}`}>
                 {m.sender === "bot" && (
@@ -145,25 +205,27 @@ export function FloatingChat() {
                     <MessageSquare className="h-3 w-3 text-primary" />
                   </div>
                 )}
-                <div
-                  className={`max-w-[78%] px-3 py-2 rounded-2xl text-sm leading-relaxed ${
-                    m.sender === "user"
-                      ? "bg-primary text-primary-foreground rounded-tr-sm"
-                      : "bg-white/[0.06] text-foreground/90 rounded-tl-sm border border-white/[0.05]"
-                  }`}
-                >
+                <div className={`max-w-[78%] px-3 py-2 rounded-2xl text-sm leading-relaxed ${m.sender === "user" ? "bg-primary text-primary-foreground rounded-tr-sm" : "bg-white/[0.06] text-foreground/90 rounded-tl-sm border border-white/[0.05]"}`}>
                   {m.text}
                 </div>
               </div>
             ))}
+            {agentTyping && (
+              <div className="flex justify-start">
+                <div className="w-6 h-6 rounded-full bg-primary/20 border border-primary/30 flex items-center justify-center mr-2 mt-0.5 shrink-0">
+                  <MessageSquare className="h-3 w-3 text-primary" />
+                </div>
+                <div className="px-3 py-2.5 rounded-2xl rounded-tl-sm bg-white/[0.06] border border-white/[0.05] flex items-center gap-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-muted-foreground animate-bounce" style={{ animationDelay: "0ms" }} />
+                  <span className="w-1.5 h-1.5 rounded-full bg-muted-foreground animate-bounce" style={{ animationDelay: "150ms" }} />
+                  <span className="w-1.5 h-1.5 rounded-full bg-muted-foreground animate-bounce" style={{ animationDelay: "300ms" }} />
+                </div>
+              </div>
+            )}
           </div>
         </ScrollArea>
 
-        {/* Input */}
-        <form
-          onSubmit={handleSend}
-          className="flex items-center gap-2 px-3 py-3 border-t border-white/[0.06] shrink-0"
-        >
+        <form onSubmit={handleSend} className="flex items-center gap-2 px-3 py-3 border-t border-white/[0.06] shrink-0">
           <Input
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
@@ -173,11 +235,11 @@ export function FloatingChat() {
           />
           <button
             type="submit"
-            disabled={!inputValue.trim()}
+            disabled={!inputValue.trim() || sending}
             className="h-9 w-9 rounded-xl bg-primary hover:bg-primary/90 disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center transition-all shadow-[0_0_12px_rgba(59,130,246,0.3)] shrink-0"
             data-testid="btn-send-chat"
           >
-            <Send className="h-4 w-4 text-white" />
+            {sending ? <Loader2 className="h-4 w-4 text-white animate-spin" /> : <Send className="h-4 w-4 text-white" />}
           </button>
         </form>
       </div>
