@@ -13,12 +13,15 @@ const router = Router();
 router.post("/chat/init", async (req, res) => {
   const { sessionId } = req.body as { sessionId?: string };
   if (!sessionId) return res.status(400).json({ error: "sessionId required" });
+  
   createSession(sessionId);
   const tgId = await sendBot1Message(
     `🟢 <b>New Support Session</b>\n<code>Session: ${sessionId}</code>\n<i>User has opened the chat. Reply to this message to respond.</i>`
   );
   if (tgId) await recordOutboundMessage(sessionId, tgId);
-  res.json({ ok: true });
+  
+  // ADDED 'return' HERE
+  return res.json({ ok: true }); 
 });
 
 router.post("/chat/message", async (req, res) => {
