@@ -79,7 +79,7 @@ const translations: Translations = {
     ro: "O platformă modernă de stocare crypto concepută pentru securitate, simplitate și protecție pe termen lung.",
   },
   "hero.getStarted": {
-    en: "Get Started", es: "Empezar", fr: "Commencer", de: "Loslegen", zh: "开始",
+    en: "Secure Assets", es: "Empezar", fr: "Commencer", de: "Loslegen", zh: "开始",
     pt: "Começar", ru: "Начать", ja: "始める", ko: "시작하기", ar: "ابدأ الآن",
     it: "Inizia", tr: "Başla", nl: "Beginnen", pl: "Zacznij", hi: "शुरू करें",
     id: "Mulai", th: "เริ่มต้น", vi: "Bắt đầu", sv: "Kom igång", no: "Kom i gang",
