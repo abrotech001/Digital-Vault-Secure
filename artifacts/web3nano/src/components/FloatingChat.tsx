@@ -41,6 +41,9 @@ export function FloatingChat() {
       x: clamp(p.x, 8, window.innerWidth - (isOpen ? CHAT_W : BTN_W) - 8),
       y: clamp(p.y, 8, window.innerHeight - (isOpen ? CHAT_H : BTN_H) - 8),
     }));
+    
+    onResize(); // 👈 THE FIX: Instantly clamp boundaries when opened/closed
+    
     window.addEventListener("resize", onResize);
     return () => window.removeEventListener("resize", onResize);
   }, [isOpen]);
