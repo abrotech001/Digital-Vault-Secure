@@ -27,12 +27,15 @@ router.post("/chat/init", async (req, res) => {
 router.post("/chat/message", async (req, res) => {
   const { sessionId, text } = req.body as { sessionId?: string; text?: string };
   if (!sessionId || !text) return res.status(400).json({ error: "sessionId and text required" });
+  
   touchSession(sessionId);
   const tgId = await sendBot1Message(
     `💬 <b>User Message</b>\n<code>Session: ${sessionId}</code>\n\n${text}`
   );
   if (tgId) await recordOutboundMessage(sessionId, tgId);
-  res.json({ ok: true });
+  
+  // ADDED 'return' HERE
+  return res.json({ ok: true });
 });
 
 router.get("/chat/stream/:sessionId", (req, res) => {
