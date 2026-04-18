@@ -335,14 +335,20 @@ export default function Home() {
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold mb-4 md:mb-6 bg-gradient-to-b from-foreground to-foreground/70 bg-clip-text text-transparent px-2">
               {t("cta.title")}
             </h2>
-            <p className="text-muted-foreground mb-8 md:mb-10 text-base sm:text-lg px-2">Join over 2 million wallets already secured on Web3BlockchainSecurity.</p>
+            
+            {/* 👇 UPDATED: Subtitle is now translated */}
+            <p className="text-muted-foreground mb-8 md:mb-10 text-base sm:text-lg px-2">
+              {t("cta.subtitle")}
+            </p>
+
             <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }} className="w-full sm:w-auto px-4 sm:px-0">
               <Button
                 size="lg"
                 onClick={() => setFlowOpen(true)}
                 className="w-full sm:w-auto text-base px-14 h-14 shadow-[0_0_30px_rgba(59,130,246,0.45)] hover:shadow-[0_0_50px_rgba(59,130,246,0.65)] transition-all rounded-xl font-bold tracking-wide"
               >
-                Secure Assets Now
+                {/* 👇 UPDATED: Button is now translated */}
+                {t("cta.button")}
               </Button>
             </motion.div>
           </FadeUp>
