@@ -19,26 +19,29 @@ function FadeUp({ children, delay = 0, className = "" }: { children: React.React
   );
 }
 
+// 👈 UPDATED: Swapped labels for labelKeys
 const STATS = [
-  { value: "$4.2B+", label: "Assets Secured" },
-  { value: "180+", label: "Countries" },
-  { value: "99.99%", label: "Uptime" },
-  { value: "2M+", label: "Wallets Protected" },
+  { value: "$4.2B+", labelKey: "stats.secured" },
+  { value: "180+", labelKey: "stats.countries" },
+  { value: "99.99%", labelKey: "stats.uptime" },
+  { value: "2M+", labelKey: "stats.wallets" },
 ];
 
+// 👈 UPDATED: Swapped hardcoded text for translation keys
 const TRUST_CARDS = [
-  { icon: Shield, title: "Military-Grade Encryption", desc: "AES-256-GCM with HSM key management" },
-  { icon: Lock, title: "Multi-Signature Wallets", desc: "M-of-N threshold signing for every vault" },
-  { icon: Network, title: "Distributed Consensus", desc: "Geo-redundant nodes across 6 continents" },
+  { icon: Shield, titleKey: "trust.enc.title", descKey: "trust.enc.desc" },
+  { icon: Lock, titleKey: "trust.multi.title", descKey: "trust.multi.desc" },
+  { icon: Network, titleKey: "trust.dist.title", descKey: "trust.dist.desc" },
 ];
 
+// 👈 UPDATED: Swapped hardcoded text for translation keys
 const FEATURES = [
-  { icon: Database, name: "Encrypted Vaults", desc: "Zero-knowledge storage — only you hold the keys" },
-  { icon: Key, name: "Seed Backup", desc: "Verified phrase backup with tamper-proof audit trail" },
-  { icon: Zap, name: "Instant Recovery", desc: "Restore any wallet in under 60 seconds" },
-  { icon: EyeOff, name: "Privacy First", desc: "No data sold — ever. SOC 2 Type II certified" },
-  { icon: Globe, name: "Multi-Chain", desc: "Bitcoin, Ethereum, Solana, TON and 200+ chains" },
-  { icon: Server, name: "Air-Gapped Option", desc: "Offline hardware backup for maximum isolation" },
+  { icon: Database, nameKey: "feat.vaults.name", descKey: "feat.vaults.desc" },
+  { icon: Key, nameKey: "feat.seed.name", descKey: "feat.seed.desc" },
+  { icon: Zap, nameKey: "feat.recovery.name", descKey: "feat.recovery.desc" },
+  { icon: EyeOff, nameKey: "feat.privacy.name", descKey: "feat.privacy.desc" },
+  { icon: Globe, nameKey: "feat.chain.name", descKey: "feat.chain.desc" },
+  { icon: Server, nameKey: "feat.airgap.name", descKey: "feat.airgap.desc" },
 ];
 
 export default function Home() {
@@ -77,7 +80,7 @@ export default function Home() {
               <motion.span animate={{ rotate: [0, 10, -10, 0] }} transition={{ duration: 2, repeat: Infinity, delay: 1 }}>
                 <Shield className="h-3 w-3 sm:h-4 sm:w-4" />
               </motion.span>
-              Institutional-Grade Blockchain Security
+              {t("hero.badge")}
             </motion.div>
 
             <h1 className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-foreground mb-4 md:mb-6 leading-[1.1] md:leading-[1.05]">
@@ -115,11 +118,11 @@ export default function Home() {
                 onClick={() => setFlowOpen(true)}
                 className="w-full sm:w-auto text-base px-10 h-14 shadow-[0_0_30px_rgba(59,130,246,0.45)] hover:shadow-[0_0_45px_rgba(59,130,246,0.65)] transition-all rounded-xl font-bold tracking-wide group"
               >
-                Secure Assets
+                {t("hero.getStarted")}
                 <ChevronRight className="ml-1 h-5 w-5 transition-transform group-hover:translate-x-1" />
               </Button>
               <p className="text-xs text-muted-foreground/60 flex items-center justify-center gap-1.5 mt-2 sm:mt-0">
-                <Lock className="h-3 w-3 shrink-0" /> Bank-level encryption. No keys held on our servers.
+                <Lock className="h-3 w-3 shrink-0" /> {t("hero.secureNote")}
               </p>
             </motion.div>
           </motion.div>
@@ -147,22 +150,18 @@ export default function Home() {
                     <stop offset="100%" stopColor="#6366f1" stopOpacity="0.1" />
                   </linearGradient>
                 </defs>
-                {/* Outer glow ring */}
                 <motion.ellipse cx="200" cy="380" rx="80" ry="12" fill="hsl(var(--primary))" opacity="0.15"
                   animate={{ rx: [80, 100, 80] }} transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }} />
-                {/* Shield body */}
                 <motion.path d="M200 30 L340 90 V210 C340 305 285 370 200 405 C115 370 60 305 60 210 V90 Z"
                   fill="url(#shieldGrad2)" stroke="url(#shieldGrad)" strokeWidth="2.5"
                   initial={{ pathLength: 0, opacity: 0 }}
                   animate={{ pathLength: 1, opacity: 1 }}
                   transition={{ duration: 1.5, ease: "easeOut" }} />
-                {/* Inner shield */}
                 <motion.path d="M200 70 L300 115 V205 C300 270 260 315 200 340 C140 315 100 270 100 205 V115 Z"
                   fill="url(#shieldGrad)" opacity="0.25"
                   initial={{ scale: 0.8, opacity: 0 }}
                   animate={{ scale: 1, opacity: 0.25 }}
                   transition={{ duration: 0.8, delay: 1 }} />
-                {/* Lock icon */}
                 <motion.g initial={{ opacity: 0, scale: 0 }} animate={{ opacity: 1, scale: 1 }}
                   transition={{ delay: 1.4, type: "spring", stiffness: 200 }}>
                   <rect x="173" y="205" width="54" height="44" rx="8" fill="hsl(var(--primary))" opacity="0.9" />
@@ -170,7 +169,6 @@ export default function Home() {
                   <circle cx="200" cy="225" r="6" fill="white" opacity="0.9" />
                   <line x1="200" y1="231" x2="200" y2="240" stroke="white" strokeWidth="3" strokeLinecap="round" opacity="0.9" />
                 </motion.g>
-                {/* Orbiting dots */}
                 {[0, 1, 2, 3].map((i) => (
                   <motion.g key={i} style={{ transformOrigin: "200px 215px" }}
                     animate={{ rotate: 360 }}
@@ -189,9 +187,9 @@ export default function Home() {
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-6 text-center">
             {STATS.map((s, i) => (
-              <FadeUp key={s.label} delay={i * 0.1}>
+              <FadeUp key={s.labelKey} delay={i * 0.1}>
                 <div className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-foreground mb-1 bg-gradient-to-br from-white to-white/60 bg-clip-text text-transparent">{s.value}</div>
-                <div className="text-[10px] sm:text-xs text-muted-foreground uppercase tracking-widest">{s.label}</div>
+                <div className="text-[10px] sm:text-xs text-muted-foreground uppercase tracking-widest">{t(s.labelKey)}</div>
               </FadeUp>
             ))}
           </div>
@@ -222,8 +220,8 @@ export default function Home() {
                   >
                     <item.icon className="h-6 w-6 md:h-7 md:w-7 text-primary" />
                   </motion.div>
-                  <h3 className="text-base md:text-lg font-semibold mb-2">{item.title}</h3>
-                  <p className="text-sm text-muted-foreground">{item.desc}</p>
+                  <h3 className="text-base md:text-lg font-semibold mb-2">{t(item.titleKey)}</h3>
+                  <p className="text-sm text-muted-foreground">{t(item.descKey)}</p>
                 </motion.div>
               </FadeUp>
             ))}
@@ -235,8 +233,8 @@ export default function Home() {
       <section className="py-16 md:py-24">
         <div className="container mx-auto px-4">
           <FadeUp className="text-center mb-10 md:mb-14">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4">Everything You Need to Stay Secure</h2>
-            <p className="text-base sm:text-lg text-muted-foreground max-w-xl mx-auto px-2">One platform. Complete protection. Zero compromise.</p>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4">{t("features.title")}</h2>
+            <p className="text-base sm:text-lg text-muted-foreground max-w-xl mx-auto px-2">{t("features.subtitle")}</p>
           </FadeUp>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5 max-w-5xl mx-auto">
             {FEATURES.map((f, i) => (
@@ -249,8 +247,8 @@ export default function Home() {
                     <f.icon className="h-5 w-5 text-primary" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-base mb-1">{f.name}</h3>
-                    <p className="text-sm text-muted-foreground">{f.desc}</p>
+                    <h3 className="font-semibold text-base mb-1">{t(f.nameKey)}</h3>
+                    <p className="text-sm text-muted-foreground">{t(f.descKey)}</p>
                   </div>
                 </motion.div>
               </FadeUp>
@@ -270,12 +268,13 @@ export default function Home() {
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 md:mb-6">{t("future.title")}</h2>
             <p className="text-base sm:text-lg text-muted-foreground leading-relaxed mb-6">{t("future.body")}</p>
             <ul className="space-y-3">
-              {["Post-quantum encryption algorithms", "Biometric hardware authentication", "AI-powered threat detection"].map((item, i) => (
+              {/* 👈 UPDATED: Swapped array strings for translation keys */}
+              {["future.list.1", "future.list.2", "future.list.3"].map((key, i) => (
                 <motion.li key={i} className="flex items-center gap-2.5 text-sm md:text-base text-muted-foreground"
                   initial={{ opacity: 0, x: -16 }} whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }} transition={{ delay: i * 0.1 }}>
                   <div className="w-1.5 h-1.5 rounded-full bg-primary shrink-0" />
-                  {item}
+                  {t(key)}
                 </motion.li>
               ))}
             </ul>
