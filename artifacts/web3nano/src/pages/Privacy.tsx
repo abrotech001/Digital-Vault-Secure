@@ -1,5 +1,5 @@
 import { Layout } from "@/components/Layout";
-import { motion } from "framer-motion";
+import { motion, Variants } from "framer-motion"; // Added Variants here
 import { Shield, Lock, Eye, Server, RefreshCw, Mail } from "lucide-react";
 
 const sections = [
@@ -35,12 +35,14 @@ const sections = [
   },
 ];
 
-const containerVariants = {
+// Added ': Variants' to correctly type the object
+const containerVariants: Variants = {
   hidden: {},
   show: { transition: { staggerChildren: 0.12 } },
 };
 
-const itemVariants = {
+// Added ': Variants' to correctly type the object
+const itemVariants: Variants = {
   hidden: { opacity: 0, y: 24 },
   show: { opacity: 1, y: 0, transition: { duration: 0.55, ease: "easeOut" } },
 };
