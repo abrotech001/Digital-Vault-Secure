@@ -89,7 +89,7 @@ export default function Home() {
                 transition={{ duration: 0.6, delay: 0.15 }}
                 className="block"
               >
-                Web3BlockchainSecurity
+                
               </motion.span>
               <motion.span
                 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
