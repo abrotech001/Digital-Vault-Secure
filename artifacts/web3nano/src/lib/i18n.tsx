@@ -7,7 +7,7 @@ type Language =
   | "id" | "th" | "vi" | "sv" | "no"
   | "da" | "fi" | "el" | "cs" | "ro";
 
-type Translations = Record<string, Record<Language, string>>;
+type Translations = Record<string, Partial<Record<Language, string>> & { en: string }>;
 
 const translations: Translations = {
   "nav.dashboard": {
