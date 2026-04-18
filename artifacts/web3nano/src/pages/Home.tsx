@@ -81,36 +81,29 @@ export default function Home() {
             </motion.div>
 
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-foreground mb-6 leading-[1.05]">
-              <motion.span
-                initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.15 }}
-                className="block"
-              >
-                Web3BlockchainSecurity
-              </motion.span>
-              <motion.span
-                initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.28 }}
-                className="block bg-gradient-to-r from-primary via-blue-400 to-indigo-400 bg-clip-text text-transparent"
-              >
-                Secure Your Digital Assets
-              </motion.span>
-              <motion.span
-                initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.4 }}
-                className="block text-foreground/90"
-              >
-                with Confidence
-              </motion.span>
-            </h1>
+  <motion.span
+    initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.6, delay: 0.15 }}
+    className="block"
+  >
+    Web3BlockchainSecurity
+  </motion.span>
+  <motion.span
+    initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.6, delay: 0.28 }}
+    className="block bg-gradient-to-r from-primary via-blue-400 to-indigo-400 bg-clip-text text-transparent text-3xl md:text-5xl mt-2"
+  >
+    {t("hero.headline")} {/* 👈 Use the translation hook here */}
+  </motion.span>
+</h1>
 
-            <motion.p
-              initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-              transition={{ duration: 0.7, delay: 0.5 }}
-              className="text-lg md:text-xl text-muted-foreground mb-10 max-w-2xl mx-auto leading-relaxed"
-            >
-              The world's most trusted blockchain security platform — protecting digital assets for institutions, funds, and individuals across 180+ countries.
-            </motion.p>
+<motion.p
+  initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+  transition={{ duration: 0.7, delay: 0.5 }}
+  className="text-lg md:text-xl text-muted-foreground mb-10 max-w-2xl mx-auto leading-relaxed"
+>
+  {t("hero.subheadline")} {/* 👈 And here! */}
+</motion.p>
 
             <motion.div
               initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
